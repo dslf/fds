@@ -1,8 +1,19 @@
 #include <windows.h>
+#include <stdint.h>
 
 #define local_persist static 
 #define global_variable static 
 #define internal static 
+
+typedef int8_t int8;
+typedef int16_t int16;
+typedef int32_t int32;
+typedef int64_t int64;
+
+typedef uint8_t uint8;
+typedef uint16_t uint16;
+typedef uint32_t uint32;
+typedef uint64_t uint64;
 
 global_variable bool Running;
 
@@ -33,6 +44,34 @@ Win32ResizeDIBSection(int Width, int Height)
   int BytesPerPixel = 4;
   int BitmapMemorySize = (BitmapWidth * BitmapHeight) * BytesPerPixel;
   BitmapMemory = VirtualAlloc(0, BitmapMemorySize, MEM_COMMIT, PAGE_READWRITE);
+
+  int Pitch = Width * BytesPerPixel;
+  uint8 *Row = (uint8 *) BitmapMemory;
+  for(int Y = 0;
+      Y < BitmapHeight;
+      ++Y)
+  {
+    uint8 *Pixel = (uint8 *)Row;
+    for(int X = 0;
+        X < BitmapWidth;
+        ++X)
+    {
+     *Pixel = (uint8)X;
+     ++Pixel;
+
+     *Pixel = (uint8)Y;
+     ++Pixel;
+
+     *Pixel = 0;
+     ++Pixel;
+
+     *Pixel = 0;
+     ++Pixel; 
+      
+    }
+
+    Row += Pitch;
+  }
 }
 
 internal void
