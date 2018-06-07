@@ -1,8 +1,4 @@
-#include <iostream>
 #include <windows.h>
-#include <fstream>
-
-using namespace std;
 
 #define local_persist static 
 #define global_variable static 
